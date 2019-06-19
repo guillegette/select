@@ -1407,11 +1407,11 @@ class Select extends React.Component<Partial<ISelectProps>, ISelectState> {
       if (maxTagPlaceholderEl) {
         selectedValueNodes.push(maxTagPlaceholderEl);
       }
-      selectedValueNodes.push(
-        <li className={`${prefixCls}-search ${prefixCls}-search--inline`} key="__input">
-          {this.getInputElement()}
-        </li>,
-      );
+      // selectedValueNodes.push(
+      //   <li className={`${prefixCls}-search ${prefixCls}-search--inline`} key="__input">
+      //     {this.getInputElement()}
+      //   </li>,
+      // );
 
       if (isMultipleOrTags(props) && choiceTransitionName) {
         innerNode = (
@@ -1427,12 +1427,7 @@ class Select extends React.Component<Partial<ISelectProps>, ISelectState> {
         innerNode = <ul>{selectedValueNodes}</ul>;
       }
     }
-    return (
-      <div className={className} ref={this.saveTopCtrlRef}>
-        {this.getPlaceholderElement()}
-        {innerNode}
-      </div>
-    );
+    return innerNode;
   };
   public renderArrow(multiple: boolean) {
     // showArrow : Set to true if not multiple by default but keep set value.
@@ -1548,70 +1543,77 @@ class Select extends React.Component<Partial<ISelectProps>, ISelectState> {
       [`${prefixCls}-loading`]: !!loading,
     };
     return (
-      <SelectTrigger
-        onPopupFocus={this.onPopupFocus}
-        onMouseEnter={this.props.onMouseEnter}
-        onMouseLeave={this.props.onMouseLeave}
-        dropdownAlign={props.dropdownAlign}
-        dropdownClassName={props.dropdownClassName}
-        dropdownMatchSelectWidth={props.dropdownMatchSelectWidth}
-        defaultActiveFirstOption={props.defaultActiveFirstOption}
-        dropdownMenuStyle={props.dropdownMenuStyle}
-        transitionName={props.transitionName}
-        animation={props.animation}
-        prefixCls={props.prefixCls}
-        dropdownStyle={props.dropdownStyle}
-        combobox={props.combobox}
-        showSearch={props.showSearch}
-        options={options}
-        empty={empty}
-        multiple={multiple}
-        disabled={disabled}
-        visible={realOpen}
-        inputValue={state.inputValue}
-        value={state.value}
-        backfillValue={state.backfillValue}
-        firstActiveValue={props.firstActiveValue}
-        onDropdownVisibleChange={this.onDropdownVisibleChange}
-        getPopupContainer={props.getPopupContainer}
-        onMenuSelect={this.onMenuSelect}
-        onMenuDeselect={this.onMenuDeselect}
-        onPopupScroll={props.onPopupScroll}
-        showAction={props.showAction}
-        ref={this.saveSelectTriggerRef}
-        menuItemSelectedIcon={props.menuItemSelectedIcon}
-        dropdownRender={props.dropdownRender}
-        ariaId={ariaId}
-      >
-        <div
-          id={props.id}
-          style={props.style}
-          ref={this.saveRootRef}
-          onBlur={this.onOuterBlur}
-          onFocus={this.onOuterFocus}
-          className={classnames(rootCls)}
-          onMouseDown={this.markMouseDown}
-          onMouseUp={this.markMouseLeave}
-          onMouseOut={this.markMouseLeave}
+      <div key="selectContainer">
+        <div key="selectedValues">{multiple && ctrlNode}</div>
+        <SelectTrigger
+          onPopupFocus={this.onPopupFocus}
+          onMouseEnter={this.props.onMouseEnter}
+          onMouseLeave={this.props.onMouseLeave}
+          dropdownAlign={props.dropdownAlign}
+          dropdownClassName={props.dropdownClassName}
+          dropdownMatchSelectWidth={props.dropdownMatchSelectWidth}
+          defaultActiveFirstOption={props.defaultActiveFirstOption}
+          dropdownMenuStyle={props.dropdownMenuStyle}
+          transitionName={props.transitionName}
+          animation={props.animation}
+          prefixCls={props.prefixCls}
+          dropdownStyle={props.dropdownStyle}
+          combobox={props.combobox}
+          showSearch={props.showSearch}
+          options={options}
+          empty={empty}
+          multiple={multiple}
+          disabled={disabled}
+          visible={realOpen}
+          inputValue={state.inputValue}
+          value={state.value}
+          backfillValue={state.backfillValue}
+          firstActiveValue={props.firstActiveValue}
+          onDropdownVisibleChange={this.onDropdownVisibleChange}
+          getPopupContainer={props.getPopupContainer}
+          onMenuSelect={this.onMenuSelect}
+          onMenuDeselect={this.onMenuDeselect}
+          onPopupScroll={props.onPopupScroll}
+          showAction={props.showAction}
+          ref={this.saveSelectTriggerRef}
+          menuItemSelectedIcon={props.menuItemSelectedIcon}
+          dropdownRender={props.dropdownRender}
+          ariaId={ariaId}
         >
           <div
-            ref={this.saveSelectionRef}
-            key="selection"
-            className={`${prefixCls}-selection
-            ${prefixCls}-selection--${multiple ? 'multiple' : 'single'}`}
-            role="combobox"
-            aria-autocomplete="list"
-            aria-haspopup="true"
-            aria-controls={ariaId}
-            aria-expanded={realOpen}
-            {...extraSelectionProps}
+            id={props.id}
+            style={props.style}
+            ref={this.saveRootRef}
+            onBlur={this.onOuterBlur}
+            onFocus={this.onOuterFocus}
+            className={classnames(rootCls)}
+            onMouseDown={this.markMouseDown}
+            onMouseUp={this.markMouseLeave}
+            onMouseOut={this.markMouseLeave}
           >
-            {ctrlNode}
-            {this.renderClear()}
-            {this.renderArrow(!!multiple)}
+            <div
+              ref={this.saveSelectionRef}
+              key="selection"
+              className={`${prefixCls}-selection
+            ${prefixCls}-selection--${multiple ? 'multiple' : 'single'}`}
+              role="combobox"
+              aria-autocomplete="list"
+              aria-haspopup="true"
+              aria-controls={ariaId}
+              aria-expanded={realOpen}
+              {...extraSelectionProps}
+            >
+              <div className={`${prefixCls}-selection__rendered`} ref={this.saveTopCtrlRef}>
+                {this.getPlaceholderElement()}
+                {!multiple && ctrlNode}
+                {multiple && this.getInputElement()}
+              </div>
+              {this.renderClear()}
+              {this.renderArrow(!!multiple)}
+            </div>
           </div>
-        </div>
-      </SelectTrigger>
+        </SelectTrigger>
+      </div>
     );
   }
 }
